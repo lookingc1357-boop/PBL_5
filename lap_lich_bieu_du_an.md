@@ -7,18 +7,18 @@ Giả định lập lịch: tổng thời gian thực hiện là 5 tháng, tươ
 | 1 | A | Thu thập yêu cầu hệ thống từ bài toán DevSecOps | 4 ngày | - | 4 | Chung, Hậu, Lợi, Thái | Chung điều phối lấy yêu cầu từ các mảng AI, Backend, Frontend; có tính đến rủi ro thay đổi yêu cầu. |
 | 2 | B | Xác định danh mục các loại lỗ hổng CWE cần phát hiện | 3 ngày | A | 2 | Hậu, Chung | Hậu chọn phạm vi CWE; Chung chốt phạm vi yêu cầu để giảm rủi ro đổi chuẩn CWE. |
 | 3 | C | Lập tài liệu SRS, Use Case, Sequence | 5 ngày | A, B | 1 | Chung | Hoàn thiện đặc tả làm cơ sở thiết kế và nghiệm thu. |
-| 4 | D | Thiết kế kiến trúc tổng quan Frontend, Backend, AI Layer, Execution Layer | 5 ngày | C | 4 | Chung, Hậu, Lợi, Thái | Chốt kiến trúc module và luồng tích hợp để giảm rủi ro xung đột Frontend/Backend/AI. |
+| 4 | D | Thiết kế kiến trúc tổng quan Frontend, Backend, AI Layer, Execution Layer | 5 ngày | C | 3 | Chung , Lợi, Thái | Chốt kiến trúc module và luồng tích hợp để giảm rủi ro xung đột Frontend/Backend/AI. |
 | 5 | E | Thiết kế database ERD và cấu trúc lưu trữ Project, User, File | 4 ngày | D | 2 | Lợi, Chung | Lợi thiết kế dữ liệu Backend; Chung rà soát theo yêu cầu nghiệp vụ. |
-| 6 | F | Thiết kế UI/UX cho Editor, Terminal và Dashboard | 4 ngày | D | 2 | Thái, Chung | Thái thiết kế giao diện IDE; Chung rà soát luồng sử dụng. |
+| 6 | F | Thiết kế UI/UX cho Editor, Terminal và Dashboard | 4 ngày | D | 1 | Thái | Thái thiết kế giao diện IDE; 
 | 7 | G | Thu thập, làm sạch, tiền xử lý BigVul và lọc theo ngưỡng | 8 ngày | B | 1 | Hậu | Chuẩn hóa dữ liệu AI, xử lý mất cân bằng dữ liệu theo rủi ro mô hình. |
 | 8 | H | Cấu hình CodeBERT và thiết kế kiến trúc đầu ra đa nhiệm | 9 ngày | G | 1 | Hậu | Xây dựng nền mô hình AI cho phân loại lỗ hổng CWE. |
 | 9 | I | Huấn luyện mô hình với Inverse Frequency Weighting và Uncertainty Weighting | 13 ngày | H | 1 | Hậu | Huấn luyện và điều chỉnh trọng số để giảm rủi ro chất lượng AI thấp. |
-| 10 | J | Đánh giá F1-score, kiểm thử dự đoán và đóng gói mô hình thành API Service | 6 ngày | I | 2 | Hậu, Lợi | Hậu đánh giá model; Lợi hỗ trợ đóng gói API để tích hợp Backend. |
+| 10 | J | Đánh giá F1-score, kiểm thử dự đoán và đóng gói mô hình thành API Service | 6 ngày | I | 1 | Hậu, Lợi | Hậu đánh giá model; |
 | 11 | K | Khởi tạo Backend, cấu hình DB, Entity/Repository và JWT/Session | 6 ngày | E | 1 | Lợi | Tạo nền Backend Spring Boot, bảo mật phiên và kết nối DB. |
 | 12 | L | Xây dựng API quản lý dự án và logic đọc/ghi cây thư mục | 8 ngày | K | 1 | Lợi | Xây dựng API lõi cho Project/File, phục vụ Dashboard và cây thư mục. |
-| 13 | M | Cấu hình Message Broker và WebSocket đồng bộ mã nguồn | 8 ngày | L | 2 | Lợi, Thái | Lợi xử lý WebSocket Backend; Thái phối hợp định dạng dữ liệu đồng bộ Editor. |
-| 14 | N | Tích hợp Docker Client, khởi tạo Sandbox độc lập, xử lý I/O Terminal | 9 ngày | K | 2 | Lợi, Thái | Lợi xử lý Docker Sandbox và giới hạn tài nguyên; Thái phối hợp Terminal UI. |
-| 15 | O | Thiết kế hàng đợi gọi API sang AI Server và stream kết quả về Frontend | 6 ngày | J, M | 3 | Lợi, Hậu, Thái | Kết nối Backend với AI Service, stream kết quả để tránh timeout. |
+| 13 | M | Cấu hình Message Broker và WebSocket đồng bộ mã nguồn | 8 ngày | L | 1 | Lợi, Thái | Lợi xử lý WebSocket Backend & Thái phối hợp định dạng dữ liệu đồng bộ Editor. |
+| 14 | N | Tích hợp Docker Client, khởi tạo Sandbox độc lập, xử lý I/O Terminal | 9 ngày | K | 1 | Lợi | Lợi xử lý Docker Sandbox và giới hạn tài nguyên & Thái phối hợp Terminal UI. |
+| 15 | O | Thiết kế hàng đợi gọi API sang AI Server và stream kết quả về Frontend | 6 ngày | J, M | 2 | Lợi, Hậu | Kết nối Backend với AI Service, stream kết quả để tránh timeout. |
 | 16 | P | Khởi tạo Frontend, TailwindCSS, Router và layout IDE | 5 ngày | F | 1 | Thái | Tạo khung Frontend và layout chuẩn IDE. |
 | 17 | Q | Xây dựng Dashboard quản lý dự án và form tạo mới | 5 ngày | P, L | 2 | Thái, Lợi | Thái xây UI Dashboard; Lợi hỗ trợ API quản lý dự án. |
 | 18 | R | Render cây thư mục đệ quy và Context Menu tạo/xóa tệp tin | 6 ngày | Q, L | 2 | Thái, Lợi | Đồng bộ thao tác file giữa Frontend và Backend. |

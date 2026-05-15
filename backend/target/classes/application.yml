@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: qlda-backend
+
+qlda:
+  ai-service-url: http://ai-service:8000
+  workspace-root: ./workspace
