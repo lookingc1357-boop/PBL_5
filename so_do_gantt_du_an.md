@@ -39,7 +39,7 @@ Quy ước:
 
 ## Mermaid Gantt
 
-Ngày bắt đầu minh họa: 2026-06-01. Thời lượng vẫn giữ theo số ngày làm việc đã ước lượng trong lịch.
+Ngày bắt đầu minh họa: 2026-01-05. Thời lượng vẫn giữ theo số ngày làm việc đã ước lượng trong lịch.
 
 ```mermaid
 gantt
@@ -48,7 +48,7 @@ gantt
     axisFormat  %d/%m
 
     section Phân tích và thiết kế
-    A - Thu thập yêu cầu              :crit, a, 2026-06-01, 4d
+    A - Thu thập yêu cầu              :crit, a, 2026-01-05, 4d
     B - Xác định CWE                  :crit, b, after a, 3d
     C - SRS, Use Case, Sequence       :crit, c, after b, 5d
     D - Thiết kế kiến trúc            :crit, d, after c, 5d
