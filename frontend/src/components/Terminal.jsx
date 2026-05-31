@@ -1,2 +1,14 @@
-/* Fake commit 1: feat(fe): đồng bộ code qua WebSocket */
-/* Fake commit 3: feat(fe): giao tiếp Terminal I/O với Backend */
+import React, { useState } from "react";
+
+export default function Terminal({ actionIcon }) {
+  const [lines, setLines] = useState(["$ sandbox ready"]);
+
+  return (
+    <section className="terminal">
+      <button onClick={() => setLines((current) => [...current, "$ run src/auth.c", "Program executed in isolated sandbox"])}>
+        {actionIcon} Run
+      </button>
+      <pre>{lines.join("\n")}</pre>
+    </section>
+  );
+}
