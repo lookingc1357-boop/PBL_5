@@ -1,2 +1,6 @@
-/* Fake commit 0: init: setup môi trường Python cho AI */
-/* Fake commit 3: feat(ai): tiền xử lý code và lọc ngưỡng */
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.3
+scikit-learn==1.5.2
+pandas==2.2.3
+numpy==2.1.3

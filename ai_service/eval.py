@@ -1,2 +1,8 @@
-/* Fake commit 0: feat(ai): viết hàm đánh giá F1-score */
-/* Fake commit 2: feat(ai): đóng gói mô hình thành API endpoint */
+from sklearn.metrics import classification_report, f1_score
+
+
+def evaluate(y_true, y_pred):
+    return {
+        "macro_f1": f1_score(y_true, y_pred, average="macro"),
+        "report": classification_report(y_true, y_pred, zero_division=0),
+    }
