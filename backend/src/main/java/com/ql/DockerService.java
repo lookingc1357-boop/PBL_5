@@ -1,3 +1,21 @@
-/* Fake commit 0: feat(be): cài đặt Docker Java Client */
-/* Fake commit 2: feat(be): stream luồng I/O cho Terminal */
-/* Fake commit 4: fix(be): rò rỉ bộ nhớ khi đóng Sandbox */
+package com.ql;
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DockerService {
+    public Map<String, Object> runSnippet(String projectId, String language, String code) {
+        boolean risky = code.contains("while(1)") || code.contains("fork(") || code.contains("Runtime.getRuntime");
+        return Map.of(
+            "projectId", projectId,
+            "language", language,
+            "sandbox", "mock-docker-runner",
+            "exitCode", risky ? 137 : 0,
+            "stdout", risky ? "" : "Program executed in isolated sandbox",
+            "stderr", risky ? "Process killed by resource policy" : "",
+            "limits", List.of("cpu=1", "memory=256m", "timeout=5s")
+        );
+    }
+}
