@@ -1,0 +1,246 @@
+ProjectController API Documentation
+
+## Mục tiêu
+
+ProjectController quản lý dự án của user trong `D:/docker_store/{username}`.
+Mỗi project là một folder dưới `D:/docker_store/{username}/{projectName}`.
+
+## Endpoint REST
+
+1. POST `/api/projects/create`
+2. POST `/api/projects/delete`
+3. GET `/api/projects/list`
+
+## 1. Tạo dự án mới
+
+### Request
+- Method: `POST`
+- URL: `/api/projects/create`
+- Header: `Content-Type: application/json`
+- Body:
+\`\`\`json
+{
+  "projectName": "my-awesome-project"
+}
+\`\`\`
+
+### Response
+\`\`\`json
+{
+  "status": "ok",
+  "action": "created",
+  "projectName": "my-awesome-project"
+}
+\`\`\`
+
+### Chú ý
+- `projectName` phải là chuỗi không rỗng.
+- Nếu dự án đã tồn tại, backend sẽ trả lỗi HTTP 500 hoặc exception tùy cấu hình hiện tại.
+
+## 2. Xóa dự án
+
+### Request
+- Method: `POST`
+- URL: `/api/projects/delete`
+- Header: `Content-Type: application/json`
+- Body:
+\`\`\`json
+{
+  "projectName": "my-awesome-project"
+}
+\`\`\`
+
+### Response
+\`\`\`json
+{
+  "status": "ok",
+  "action": "deleted",
+  "projectName": "my-awesome-project"
+}
+\`\`\`
+
+### Chú ý
+- API sẽ xóa toàn bộ folder project và mọi nội dung bên trong.
+- Nếu project không tồn tại, backend sẽ trả lỗi `NoSuchFileException`.
+
+## 3. Lấy danh sách dự án
+
+### Request
+- Method: `GET`
+- URL: `/api/projects/list`
+
+### Response
+\`\`\`json
+{
+  "status": "ok",
+  "action": "list",
+  "projects": [
+    {
+      "name": "my-awesome-project",
+      "createdAt": "2026-04-22T10:30:45",
+      "lastModified": "2026-04-22T15:45:30",
+      "description": "This is my awesome project. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
+    },
+    {
+      "name": "another-project",
+      "createdAt": "2026-04-20T08:15:20",
+      "lastModified": "2026-04-21T14:20:10",
+      "description": ""
+    }
+  ]
+}
+\`\`\`
+
+### Project object kiểu trả về
+- `name`: `string` – tên folder project
+- `createdAt`: `string` – ngày tạo project, định dạng ISO 8601 như `yyyy-MM-ddTHH:mm:ss`
+- `lastModified`: `string` – lần chỉnh sửa gần nhất, định dạng ISO 8601
+- `description`: `string` – 200 ký tự đầu tiên từ file `README.md` trong project
+  - Nếu không tồn tại `README.md`, trả chuỗi rỗng.
+
+### Ghi chú về logic
+- Service sẽ đọc folder con của `D:/docker_store/{username}`.
+- Chỉ liệt kê các folder; file tại root user không được xử lý như project.
+- Kết quả được sắp xếp theo `lastModified` giảm dần.
+
+## Dữ liệu map sang frontend
+
+### CreateProjectRequest
+\`\`\`ts
+interface CreateProjectRequest {
+  projectName: string;
+}
+\`\`\`
+
+### DeleteProjectRequest
+\`\`\`ts
+interface DeleteProjectRequest {
+  projectName: string;
+}
+\`\`\`
+
+### ProjectInfo
+\`\`\`ts
+interface ProjectInfo {
+  name: string;
+  createdAt: string;
+  lastModified: string;
+  description: string;
+}
+\`\`\`
+
+### List response
+\`\`\`ts
+interface ProjectListResponse {
+  status: string; // "ok"
+  action: string; // "list"
+  projects: ProjectInfo[];
+}
+\`\`\`
+
+### Notes for React frontend
+- Đây là REST API, không phải STOMP.
+- Dùng `fetch` hoặc `axios` trong React.
+- Với `POST`, luôn gửi header `Content-Type: application/json`.
+- `projectName` không được để trống.
+- `description` chỉ là tóm tắt 200 ký tự đầu từ `README.md`, không phải nội dung đầy đủ.
+- Sau khi chọn project, frontend sẽ dùng STOMP File Explorer API với root project tương ứng.
+
+## Ví dụ sử dụng React
+
+### TypeScript interface
+```ts
+interface CreateProjectRequest {
+  projectName: string;
+}
+
+interface DeleteProjectRequest {
+  projectName: string;
+}
+
+interface ProjectInfo {
+  name: string;
+  createdAt: string;
+  lastModified: string;
+  description: string;
+}
+
+interface ProjectListResponse {
+  status: string;
+  action: string;
+  projects: ProjectInfo[];
+}
+```
+
+### Các hàm API trong React
+```ts
+const createProject = async (projectName: string) => {
+  const response = await fetch('/api/projects/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ projectName }),
+  });
+  return response.json();
+};
+
+const deleteProject = async (projectName: string) => {
+  const response = await fetch('/api/projects/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ projectName }),
+  });
+  return response.json();
+};
+
+const listProjects = async (): Promise<ProjectListResponse> => {
+  const response = await fetch('/api/projects/list');
+  return response.json();
+};
+```
+
+### Ví dụ component React
+```tsx
+import { useEffect, useState } from 'react';
+
+const ProjectsPage = () => {
+  const [projects, setProjects] = useState<ProjectInfo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const result = await listProjects();
+      if (result.status === 'ok') {
+        setProjects(result.projects);
+      }
+      setLoading(false);
+    };
+    fetchProjects();
+  }, []);
+
+  return (
+    <div>
+      <h1>Danh sách dự án</h1>
+      {loading ? (
+        <div>Đang tải...</div>
+      ) : (
+        <ul>
+          {projects.map((project) => (
+            <li key={project.name}>
+              <strong>{project.name}</strong>
+              <div>Created: {project.createdAt}</div>
+              <div>Last Modified: {project.lastModified}</div>
+              <p>{project.description}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+```
+
+### Quy trình React
+1. Gọi `listProjects()` trong `useEffect` để load danh sách khi trang mở.
+2. Khi user tạo project, gọi `createProject(projectName)`, sau đó refresh list.
+3. Khi user xóa project, gọi `deleteProject(projectName)`, sau đó refresh list.
+4. Khi user chọn project, dùng `D:/docker_store/{username}/{projectName}` làm root để truy vấn file tree của project.

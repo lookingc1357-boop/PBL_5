@@ -1,0 +1,1 @@
+fix lại các session khi kết nối và start container 
